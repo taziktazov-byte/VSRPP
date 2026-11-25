@@ -1,0 +1,23 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#CBD5E1"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#2563EB"/>
+
+    <Style x:Key="StyledTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Padding" Value="8,5"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BorderBrush" Value="#94A3B8"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Style.Triggers>
+            <Trigger Property="IsKeyboardFocused" Value="True">
+                <Setter Property="BorderBrush" Value="#2563EB"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

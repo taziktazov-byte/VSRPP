@@ -1,0 +1,45 @@
+<Window x:Class="Lab09.View.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="О программе"
+        Width="380"
+        Height="270"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="White">
+
+    <Grid Margin="22">
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="Профиль пользователя WPF"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Foreground="#1E3A8A"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,8"/>
+
+            <TextBlock Text="Версия 1.0 (Лабораторная работа №9, Вариант 2)"
+                       FontSize="13"
+                       FontWeight="SemiBold"
+                       Foreground="#475569"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,14"/>
+
+            <TextBlock Text="Данное окно открыто как немодальное с помощью метода Show(). Пока оно открыто, вы можете свободно взаимодействовать с главным окном приложения."
+                       FontSize="13"
+                       Foreground="#334155"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center"
+                       Margin="0,0,0,20"/>
+
+            <Button x:Name="btnCloseAbout"
+                    Content="Закрыть"
+                    Width="120"
+                    Height="34"
+                    HorizontalAlignment="Center"
+                    Background="#2563EB"
+                    Foreground="White"
+                    BorderThickness="0"
+                    Click="BtnCloseAbout_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

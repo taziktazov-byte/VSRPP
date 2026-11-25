@@ -1,0 +1,104 @@
+<Window x:Class="Lab09.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Лабораторная работа №9 — Множественные окна и диалоги"
+        Width="540"
+        Height="430"
+        MinWidth="450"
+        MinHeight="370"
+        WindowStartupLocation="CenterScreen"
+        Background="#F1F5F9">
+
+    <Grid x:Name="mainGrid" Margin="22">
+        <Border Background="White"
+                BorderBrush="#CBD5E1"
+                BorderThickness="1"
+                CornerRadius="10"
+                Padding="22">
+            <StackPanel>
+                <TextBlock x:Name="txtHeader"
+                           Text="Управление профилем пользователя"
+                           FontSize="19"
+                           FontWeight="Bold"
+                           Foreground="#1E3A8A"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,16"/>
+
+                <Border Background="#F8FAFC"
+                        BorderBrush="#E2E8F0"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="16"
+                        Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="Текущие данные профиля:"
+                                   FontWeight="Bold"
+                                   Foreground="#0F172A"
+                                   Margin="0,0,0,8"/>
+
+                        <TextBlock x:Name="txtUserName"
+                                   Text="{Binding CurrentUser.Name, StringFormat=Имя: {0}}"
+                                   FontSize="14.5"
+                                   Margin="0,3"/>
+
+                        <TextBlock x:Name="txtUserAge"
+                                   Text="{Binding CurrentUser.Age, StringFormat=Возраст: {0} лет}"
+                                   FontSize="14.5"
+                                   Margin="0,3"/>
+
+                        <TextBlock x:Name="txtUserStudent"
+                                   Text="{Binding CurrentUser.StudentStatus, StringFormat=Статус: {0}}"
+                                   FontSize="14.5"
+                                   Foreground="#2563EB"
+                                   FontWeight="SemiBold"
+                                   Margin="0,3"/>
+                    </StackPanel>
+                </Border>
+
+                <Grid Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="btnEditProfile"
+                            Grid.Column="0"
+                            Content="Редактировать профиль"
+                            Height="38"
+                            FontSize="13.5"
+                            FontWeight="SemiBold"
+                            Background="#2563EB"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Command="{Binding EditProfileCommand}"/>
+
+                    <Button x:Name="btnDeleteProfile"
+                            Grid.Column="2"
+                            Content="Удалить профиль"
+                            Height="38"
+                            FontSize="13.5"
+                            Background="#FEE2E2"
+                            Foreground="#991B1B"
+                            BorderBrush="#FCA5A5"
+                            Command="{Binding DeleteProfileCommand}"/>
+                </Grid>
+
+                <!-- Вариант 2: кнопка открытия немодального окна «О программе» -->
+                <Button x:Name="btnAbout"
+                        Content="О программе (немодальное окно Show())"
+                        Height="36"
+                        FontSize="13.5"
+                        Margin="0,0,0,14"
+                        Command="{Binding AboutCommand}"/>
+
+                <TextBlock x:Name="txtLastAction"
+                           Text="{Binding LastActionInfo}"
+                           FontSize="12.5"
+                           Foreground="#475569"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

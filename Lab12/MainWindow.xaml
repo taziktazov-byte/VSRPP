@@ -1,0 +1,219 @@
+<Window x:Class="Lab12.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Лабораторная работа №12 — Мультимедиа, изображения и графика в WPF"
+        Width="1040"
+        Height="700"
+        MinWidth="860"
+        MinHeight="580"
+        WindowStartupLocation="CenterScreen"
+        Background="#F1F5F9">
+
+    <Window.Resources>
+        <PathGeometry x:Key="CustomTrackGeometry">
+            <PathFigure StartPoint="30,75" IsClosed="True">
+                <ArcSegment Point="180,25" Size="90,55" SweepDirection="Clockwise"/>
+                <BezierSegment Point1="260,10" Point2="320,120" Point3="210,125"/>
+                <LineSegment Point="90,125"/>
+                <ArcSegment Point="30,75" Size="55,45" SweepDirection="Clockwise"/>
+            </PathFigure>
+        </PathGeometry>
+
+        <Storyboard x:Key="RectPathStoryboard" RepeatBehavior="Forever">
+            <MatrixAnimationUsingPath Storyboard.TargetName="movingRect"
+                                      Storyboard.TargetProperty="(UIElement.RenderTransform).(MatrixTransform.Matrix)"
+                                      PathGeometry="{StaticResource CustomTrackGeometry}"
+                                      Duration="0:0:4.5"
+                                      DoesRotateWithTangent="True"/>
+        </Storyboard>
+    </Window.Resources>
+
+    <Grid x:Name="mainGrid" Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="12"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 1. Воспроизведение видео (MediaElement) -->
+        <Border Grid.Row="0" Grid.Column="0"
+                Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="10" Padding="12">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top"
+                           Text="1. Мультимедиа (MediaElement)"
+                           FontSize="15" FontWeight="Bold" Foreground="#1E3A8A" Margin="0,0,0,8"/>
+
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button x:Name="btnOpenVideo" Content="Открыть видео..." Padding="10,5" Margin="0,0,6,0" Click="BtnOpenVideo_Click"/>
+                    <Button x:Name="btnPlayVideo" Content="Воспроизвести" Padding="10,5" Margin="0,0,6,0" Background="#2563EB" Foreground="White" BorderThickness="0" Click="BtnPlayVideo_Click"/>
+                    <Button x:Name="btnPauseVideo" Content="Пауза" Padding="10,5" Margin="0,0,6,0" Click="BtnPauseVideo_Click"/>
+                    <Button x:Name="btnStopVideo" Content="Остановить" Padding="10,5" Click="BtnStopVideo_Click"/>
+                </StackPanel>
+
+                <TextBlock x:Name="txtVideoPath"
+                           DockPanel.Dock="Bottom"
+                           Text="Видеофайл не выбран"
+                           FontSize="11.5"
+                           Foreground="#64748B"
+                           TextTrimming="CharacterEllipsis"
+                           Margin="0,6,0,0"/>
+
+                <Border Background="#0F172A" CornerRadius="6" ClipToBounds="True">
+                    <MediaElement x:Name="mediaPlayer"
+                                  LoadedBehavior="Manual"
+                                  UnloadedBehavior="Stop"
+                                  Stretch="Uniform"
+                                  MediaFailed="MediaPlayer_MediaFailed"/>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <!-- 2. Работа с изображениями (Image) -->
+        <Border Grid.Row="0" Grid.Column="2"
+                Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="10" Padding="12">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top"
+                           Text="2. Изображения (Image)"
+                           FontSize="15" FontWeight="Bold" Foreground="#1E3A8A" Margin="0,0,0,8"/>
+
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button x:Name="btnOpenImage" Content="Открыть изображение..." Padding="10,5" Margin="0,0,8,0" Background="#2563EB" Foreground="White" BorderThickness="0" Click="BtnOpenImage_Click"/>
+                    <Button x:Name="btnClearImage" Content="Очистить изображение" Padding="10,5" Click="BtnClearImage_Click"/>
+                </StackPanel>
+
+                <TextBlock x:Name="txtImagePath"
+                           DockPanel.Dock="Bottom"
+                           Text="Путь: файл не выбран"
+                           FontSize="11.5"
+                           Foreground="#475569"
+                           TextWrapping="Wrap"
+                           Margin="0,6,0,0"/>
+
+                <Border Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6">
+                    <Image x:Name="imgPreview" Stretch="Uniform" Margin="6"/>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <!-- 3. Рисование с помощью InkCanvas -->
+        <Border Grid.Row="2" Grid.Column="0"
+                Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="10" Padding="12">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top"
+                           Text="3. Рисование (InkCanvas)"
+                           FontSize="15" FontWeight="Bold" Foreground="#1E3A8A" Margin="0,0,0,8"/>
+
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button x:Name="btnToggleErase"
+                            Content="Стереть (переключить режим)"
+                            Padding="10,5"
+                            Margin="0,0,8,0"
+                            Background="#0F766E"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Click="BtnToggleErase_Click"/>
+                    <Button x:Name="btnClearInk"
+                            Content="Очистить холст"
+                            Padding="10,5"
+                            Margin="0,0,10,0"
+                            Click="BtnClearInk_Click"/>
+                    <TextBlock x:Name="txtInkMode"
+                               Text="Режим: Рисование"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold"
+                               Foreground="#334155"/>
+                </StackPanel>
+
+                <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" ClipToBounds="True">
+                    <InkCanvas x:Name="inkCanvas" Background="#FFFBEB"/>
+                </Border>
+            </DockPanel>
+        </Border>
+
+        <!-- 4. Фигуры, PathGeometry и Вариант 2 (PathAnimation для Rectangle) -->
+        <Border Grid.Row="2" Grid.Column="2"
+                Background="White" BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="10" Padding="12">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top"
+                           Text="4. Фигуры, PathGeometry и PathAnimation (Вариант 2)"
+                           FontSize="15" FontWeight="Bold" Foreground="#1E3A8A" Margin="0,0,0,8"/>
+
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="0,8,0,0">
+                    <Button x:Name="btnChangeShapeColors"
+                            Content="Сменить цвета фигур"
+                            Padding="10,5"
+                            Margin="0,0,8,0"
+                            Click="BtnChangeShapeColors_Click"/>
+                    <Button x:Name="btnAnimateAlongPath"
+                            Content="Запустить Rectangle по пути"
+                            Padding="10,5"
+                            Margin="0,0,8,0"
+                            Background="#2563EB"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Click="BtnAnimateAlongPath_Click"/>
+                    <Button x:Name="btnStopPathAnim"
+                            Content="Стоп"
+                            Padding="10,5"
+                            Click="BtnStopPathAnim_Click"/>
+                </StackPanel>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Три базовые фигуры: Rectangle, Ellipse, Polygon -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Rectangle x:Name="shapeRect"
+                                   Width="76" Height="46"
+                                   RadiusX="6" RadiusY="6"
+                                   Fill="#60A5FA" Stroke="#1D4ED8" StrokeThickness="2"
+                                   Margin="0,0,18,0"/>
+                        <Ellipse x:Name="shapeEllipse"
+                                 Width="66" Height="46"
+                                 Fill="#FBBF24" Stroke="#B45309" StrokeThickness="2"
+                                 Margin="0,0,18,0"/>
+                        <Polygon x:Name="shapePolygon"
+                                 Points="0,46 32,0 64,46"
+                                 Fill="#34D399" Stroke="#047857" StrokeThickness="2"/>
+                    </StackPanel>
+
+                    <!-- Path + PathGeometry + анимируемый Rectangle -->
+                    <Border Grid.Row="2" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="6" ClipToBounds="True">
+                        <Canvas x:Name="geometryCanvas" Width="360" Height="150" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Path x:Name="trackPath"
+                                  Data="{StaticResource CustomTrackGeometry}"
+                                  Stroke="#2563EB"
+                                  StrokeThickness="2.5"
+                                  StrokeDashArray="5 3"/>
+
+                            <Rectangle x:Name="movingRect"
+                                       Width="28"
+                                       Height="18"
+                                       Canvas.Left="-14"
+                                       Canvas.Top="-9"
+                                       RenderTransformOrigin="0.5,0.5"
+                                       RadiusX="4"
+                                       RadiusY="4"
+                                       Fill="#EF4444"
+                                       Stroke="#7F1D1D"
+                                       StrokeThickness="2">
+                                <Rectangle.RenderTransform>
+                                    <MatrixTransform Matrix="1,0,0,1,30,75"/>
+                                </Rectangle.RenderTransform>
+                            </Rectangle>
+                        </Canvas>
+                    </Border>
+                </Grid>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Window>

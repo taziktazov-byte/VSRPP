@@ -1,0 +1,107 @@
+<Window x:Class="Lab05.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Лабораторная работа №5 — Стили, ресурсы и триггеры"
+        Width="560"
+        Height="440"
+        MinWidth="460"
+        MinHeight="380"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource WindowBackgroundBrush}">
+
+    <Window.Resources>
+        <!-- Вариант 2: ресурс цвета фона окна, подключаемый как DynamicResource -->
+        <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#EFF6FF"/>
+
+        <!-- Локальные ресурсы окна -->
+        <SolidColorBrush x:Key="LocalTitleBrush" Color="#1E3A8A"/>
+        <sys:Double x:Key="LocalTitleFontSize">20</sys:Double>
+
+        <!-- Стиль Button с триггерами IsMouseOver и IsPressed -->
+        <Style x:Key="LocalButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="0,8,0,0"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1D4ED8"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#1E3A8A"/>
+                    <Setter Property="Foreground" Value="#FDE047"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="mainGrid" Margin="28">
+        <Border x:Name="cardBorder"
+                Background="{StaticResource CardBackgroundBrush}"
+                BorderBrush="{StaticResource CardBorderBrush}"
+                BorderThickness="1"
+                CornerRadius="12"
+                Padding="24">
+            <StackPanel x:Name="contentStack">
+                <Label x:Name="lblMainTitle"
+                       Content="Оформление с ресурсами и триггерами"
+                       FontSize="{StaticResource LocalTitleFontSize}"
+                       Foreground="{StaticResource LocalTitleBrush}"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,12"/>
+
+                <Label x:Name="lblName"
+                       Content="Введите название темы или заметку:"
+                       Style="{StaticResource GlobalLabelStyle}"/>
+
+                <TextBox x:Name="txtNote"
+                         Text="Демонстрация DynamicResource и триггеров"
+                         Style="{StaticResource StyledTextBoxStyle}"
+                         Margin="0,0,0,8"/>
+
+                <CheckBox x:Name="chkUseCustomBorder"
+                          Content="Включить уведомления о смене ресурса"
+                          Style="{StaticResource GlobalCheckBoxStyle}"
+                          IsChecked="True"/>
+
+                <CheckBox x:Name="chkCompactMode"
+                          Content="Использовать глобальный стиль CheckBox (StaticResource)"
+                          Style="{StaticResource GlobalCheckBoxStyle}"/>
+
+                <Button x:Name="btnChangeWindowBg"
+                        Content="Сменить цвет фона окна (DynamicResource)"
+                        Style="{StaticResource LocalButtonStyle}"
+                        Click="BtnChangeWindowBg_Click"/>
+
+                <Button x:Name="btnResetBg"
+                        Content="Сбросить цвет фона по умолчанию"
+                        Style="{StaticResource LocalButtonStyle}"
+                        Click="BtnResetBg_Click"/>
+
+                <Label x:Name="lblCurrentColor"
+                       Content="Текущий фон окна: #EFF6FF"
+                       Style="{StaticResource GlobalLabelStyle}"
+                       HorizontalAlignment="Center"
+                       Margin="0,10,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
