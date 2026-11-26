@@ -32,7 +32,7 @@
 ### Как работает
 1. При старте вызывается `CreateBlankCanvas(900, 560)`, создающий чистый белый холст `_workingBitmap` (и его исходную копию `_originalBitmap` для возможности сброса).
 2. Через меню «Файл» или контекстное меню (ПКМ на форме или изображении) можно открыть изображение (`OpenFileDialog`), создать новый холст или сохранить результат (`SaveFileDialog` в PNG, JPEG или BMP).
-3. Через меню «Вид» и «Текст» изменяются цвет фона формы (`ColorDialog`), видимость надписи (`_showText`), сам текст (`TextPromptForm`), его шрифт (`FontDialog`) и цвет (`ColorDialog`). Надпись отрисовывается поверх изображения в `PictureBoxCanvas_Paint` через `Graphics.DrawString` (и впечатывается в экспортируемую копию при сохранении).
+3. Через меню «Вид» и «Текст» изменяются цвет фона формы (`ColorDialog`), видимость надписи (`_showText`), сам текст (`TextPromptForm`), его шрифт (`FontDialog`) и цвет (`ColorDialog`). Надпись отрисовывается поверх изображения в `PictureBoxCanvas_Paint` через `Graphics.DrawString`. При сохранении через `SaveFileDialog` итоговое изображение формируется с заливкой выбранного фона (`BackColor`), наложенным изображением/рисунком и текстом, поэтому фон также сохраняется в файле.
 4. **Вариант 2 (рисование мышью):** при зажатии левой кнопки мыши на `pictureBoxCanvas` события `MouseDown`, `MouseMove` и `MouseUp` пересчитывают координаты курсора из режима `PictureBoxSizeMode.Zoom` в пиксельные координаты `_workingBitmap` (`TryTranslateZoomPoint`) и рисуют сглаженные линии на холсте через `Graphics.FromImage(_workingBitmap)` и `g.DrawLine(pen, _lastImagePoint, currentImagePoint)`. Цвет и толщина кисти (2, 5, 10 px) настраиваются в меню «Рисование».
 
 ---
@@ -121,7 +121,7 @@
 
 ### Как работает
 1. При изменении свойства `Name` вызывается `RaiseCanExecuteChanged()`, управляющий доступностью кнопок команд.
-2. `ShowInfoCommand` открывает `MessageBox` с текущими данными пользователя.
+2. `ShowInfoCommand` открывает `MessageBox` с текущими данными пользователя (имя, возраст, статус студента и выбранный файл `SelectedFilePath`).
 3. `DeleteUserCommand` получает имя пользователя через `CommandParameter="{Binding Name}"`, очищает поля и фиксирует удалённое имя в статусе.
 4. `ShowDialogCommand` открывает стандартный `Microsoft.Win32.OpenFileDialog` и сохраняет выбранный путь в свойство `SelectedFilePath`.
 5. **Вариант 2:** кнопка «Подтвердить» вызывает `ConfirmCommand` с `CommandParameter="{Binding Name}"`. Команда отображает `MessageBox.Show($"Удалить пользователя {targetName}?", ..., MessageBoxButton.YesNo)` и при подтверждении (`Yes`) очищает профиль.
@@ -152,7 +152,7 @@
 - `MainWindow.xaml` / `MainWindow.xaml.cs` — окно с `Canvas`, фигурами `Rectangle`, `Ellipse`, `Path` (`PathGeometry`), текстовыми блоками и общим `Storyboard` (`MainAnimationStoryboard`) в `Window.Resources`.
 
 ### Как работает
-При запуске окна (и по кнопке «Запуск анимации» / «Остановить» через `Storyboard.Begin` и `Storyboard.Stop`) одновременно воспроизводятся:
+При запуске окна анимация стартует автоматически (`Storyboard.Begin`). Кнопка «Остановить» ставит `Storyboard` на паузу (`Storyboard.Pause`), благодаря чему все объекты останавливаются ровно в текущем месте без сброса в начало, а кнопка «Запуск анимации» продолжает движение с места остановки (`Storyboard.Resume`). Одновременно воспроизводятся:
 1. **Простая анимация с `EasingFunction`:** изменение `Width` (`BounceEase`) и `Height` (`SineEase`) у `animatedRect`.
 2. **Анимация прозрачности:** плавное мигание `Opacity` у `animatedEllipse`.
 3. **Анимация по ключевым кадрам (`KeyFrames`):** `txtKeyframe` одновременно смещается по оси X (`DoubleAnimationUsingKeyFrames`), поворачивается (`RotateTransform.Angle`) и меняет цвет (`ColorAnimationUsingKeyFrames`).
@@ -187,6 +187,6 @@
   4. **Фигуры, `PathGeometry` и Вариант 2:** `Rectangle`, `Ellipse`, `Polygon` со сменой цветов по кнопке, сложная траектория `Path` (`ArcSegment`, `BezierSegment`, `LineSegment`) и анимация `movingRect`.
 
 ### Как работает
-1. Блок видео управляет воспроизведением вручную (`LoadedBehavior="Manual"`), блок изображений загружает `BitmapImage` и показывает путь к файлу в `txtImagePath`.
+1. Блок видео управляет воспроизведением вручную (`LoadedBehavior="Manual"`), обновляет полоску перемотки `sldVideoProgress` (`Slider`) и таймер `txtVideoTime` через `DispatcherTimer`, а также позволяет перематывать видео перетаскиванием ползунка или кликом по полосе времени. Блок изображений загружает `BitmapImage` и показывает путь к файлу в `txtImagePath`.
 2. `InkCanvas` переключает `EditingMode` между `InkCanvasEditingMode.Ink` и `InkCanvasEditingMode.EraseByPoint`.
-3. **Вариант 2:** при нажатии кнопки «Запустить Rectangle по пути» запускается `Storyboard` (`RectPathStoryboard`) с `MatrixAnimationUsingPath` (`DoesRotateWithTangent="True"`), и красный прямоугольник `movingRect` начинает непрерывно двигаться и поворачиваться вдоль всей траектории `CustomTrackGeometry`. Кнопка «Стоп» останавливает движение.
+3. **Вариант 2:** при нажатии кнопки «Запустить Rectangle по пути» запускается `Storyboard` (`RectPathStoryboard`) с `MatrixAnimationUsingPath` (`DoesRotateWithTangent="True"`), и красный прямоугольник `movingRect` начинает непрерывно двигаться и поворачиваться вдоль всей траектории `CustomTrackGeometry`. Кнопка «Стоп» ставит анимацию на паузу (`Storyboard.Pause`), оставляя фигуру в текущем месте пути, а повторный запуск продолжает движение с места остановки (`Storyboard.Resume`).

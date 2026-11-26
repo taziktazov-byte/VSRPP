@@ -123,11 +123,11 @@ namespace Lab08.ViewModel
         {
             string status = IsStudent ? "Да" : "Нет";
             MessageBox.Show(
-                $"Имя: {Name}\nВозраст: {Age}\nСтудент: {status}",
+                $"Имя: {Name}\nВозраст: {Age}\nСтудент: {status}\nВыбранный файл: {SelectedFilePath}",
                 "Информация о пользователе",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information);
-            StatusMessage = $"Показана информация о пользователе {Name}.";
+            StatusMessage = $"Показана информация о пользователе {Name} (файл: {SelectedFilePath}).";
         }
 
         private void DeleteUser(object? parameter)

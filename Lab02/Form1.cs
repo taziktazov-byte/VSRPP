@@ -37,7 +37,7 @@ namespace Lab02
             _originalBitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
             using (var g = Graphics.FromImage(_originalBitmap))
             {
-                g.Clear(Color.White);
+                g.Clear(Color.Transparent);
             }
 
             _workingBitmap = (Bitmap)_originalBitmap.Clone();
@@ -84,12 +84,28 @@ namespace Lab02
 
             try
             {
-                using var exportBitmap = new Bitmap(_workingBitmap);
-                if (_showText && !string.IsNullOrWhiteSpace(_overlayText))
+                int imgW = _workingBitmap.Width;
+                int imgH = _workingBitmap.Height;
+                int boxW = Math.Max(1, pictureBoxCanvas.ClientSize.Width);
+                int boxH = Math.Max(1, pictureBoxCanvas.ClientSize.Height);
+                float scale = Math.Min((float)boxW / imgW, (float)boxH / imgH);
+
+                int outW = Math.Max(imgW, (int)Math.Round(boxW / scale));
+                int outH = Math.Max(imgH, (int)Math.Round(boxH / scale));
+                int offsetX = (outW - imgW) / 2;
+                int offsetY = (outH - imgH) / 2;
+
+                using var exportBitmap = new Bitmap(outW, outH, PixelFormat.Format32bppArgb);
+                using (var g = Graphics.FromImage(exportBitmap))
                 {
-                    using var g = Graphics.FromImage(exportBitmap);
                     g.SmoothingMode = SmoothingMode.AntiAlias;
-                    DrawOverlayText(g, new RectangleF(0, 0, exportBitmap.Width, exportBitmap.Height));
+                    g.Clear(BackColor);
+                    g.DrawImage(_workingBitmap, offsetX, offsetY, imgW, imgH);
+
+                    if (_showText && !string.IsNullOrWhiteSpace(_overlayText))
+                    {
+                        DrawOverlayText(g, new RectangleF(offsetX, offsetY, imgW, imgH));
+                    }
                 }
 
                 string ext = Path.GetExtension(saveFileDialog1.FileName).ToLowerInvariant();
@@ -101,7 +117,7 @@ namespace Lab02
                 };
 
                 exportBitmap.Save(saveFileDialog1.FileName, format);
-                UpdateStatus($"Сохранено: {Path.GetFileName(saveFileDialog1.FileName)}");
+                UpdateStatus($"Сохранено (с фоном): {Path.GetFileName(saveFileDialog1.FileName)}");
             }
             catch (Exception ex)
             {
